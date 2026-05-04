@@ -1,3 +1,7 @@
+
+// Tipos de tokens reconocidos por el lexer.
+// Basado en la especificación del lenguaje Java (JLS).
+// UNKNOWN se usa para caracteres que el lexer no reconoce.
 public enum TokenType {
     // Literales
     INTEGER_LITERAL, FLOAT_LITERAL, STRING_LITERAL, CHAR_LITERAL,
@@ -39,5 +43,6 @@ public enum TokenType {
     LINE_COMMENT, BLOCK_COMMENT,
 
     // Especiales
-    EOF, UNKNOWN
+    EOF,     // fin del archivo
+    UNKNOWN  // carácter no reconocido
 }

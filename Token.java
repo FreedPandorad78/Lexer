@@ -1,8 +1,10 @@
+// Representa un token individual producido por el lexer.
+// Cada token tiene un tipo, el texto original, y su posición en el fuente.
 public class Token {
     public final TokenType type;
-    public final String value;
-    public final int line;
-    public final int column;
+    public final String value;  // texto exacto del token en el fuente
+    public final int line;      // línea donde aparece (empieza en 1)
+    public final int column;    // columna donde empieza (empieza en 1)
 
     public Token(TokenType type, String value, int line, int column) {
         this.type = type;

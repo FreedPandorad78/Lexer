@@ -4,20 +4,27 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 
+// Punto de entrada del programa.
+// Implementa un REPL (Read-Eval-Print Loop) que permite ingresar código
+// Java línea por línea y ver los tokens que produce el lexer.
 public class Main {
 
-    static final String BANNER = """
-            ╔══════════════════════════════════════════╗
-            ║        Java Lexer - REPL v1.0           ║
-            ║  Escribe código Java y ve sus tokens    ║
-            ║  Comandos:                              ║
-            ║    exit          → salir                ║
-            ║    file <ruta>   → leer archivo         ║
-            ╚══════════════════════════════════════════╝
-            """;
+    static final String BANNER =
+            "==========================================\n" +
+                    "   Java Lexer - REPL\n" +
+                    "   Escribe codigo Java y ve sus tokens\n" +
+                    "   Comandos: exit | file <ruta>\n" +
+                    "==========================================";
 
     public static void main(String[] args) {
         System.out.println(BANNER);
+
+        // Casos usados para probar el lexer durante el desarrollo:
+        //   runLexer("int x = 5;")       -> INT, IDENTIFIER, ASSIGN, INTEGER_LITERAL, SEMICOLON
+        //   runLexer("x >= 10 && y != 0") -> IDENTIFIER, GREATER_EQUAL, INTEGER_LITERAL, AND, ...
+        //   runLexer("\"hola mundo\"")    -> STRING_LITERAL
+        //   runLexer("@")                -> UNKNOWN + error lexico
+
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -28,7 +35,7 @@ public class Main {
             if (input.isEmpty()) continue;
 
             if (input.equalsIgnoreCase("exit")) {
-                System.out.println("¡Hasta luego!");
+                System.out.println("Hasta luego!");
                 break;
             }
 
@@ -36,18 +43,19 @@ public class Main {
                 String path = input.substring(5).trim();
                 try {
                     String source = Files.readString(Paths.get(path));
-                    System.out.println("\nArchivo cargado: " + path);
+                    System.out.println("Archivo cargado: " + path);
                     runLexer(source);
                 } catch (IOException e) {
-                    System.out.println("Error: no se encontró el archivo '" + path + "'");
+                    System.out.println("Error: no se encontro el archivo '" + path + "'");
                 }
                 continue;
             }
 
-            // Soporte multilínea: si termina en { pedimos más input
+            // Soporte basico de multilínea: si la línea no parece completa,
+            // pedimos más input. No es 100% preciso, es solo una heurística simple.
             StringBuilder sb = new StringBuilder(input);
             if (input.endsWith("{") || (!input.endsWith(";") && !input.endsWith("}"))) {
-                System.out.println("  (Presiona Enter en línea vacía para terminar)");
+                System.out.println("  (Presiona Enter en linea vacia para terminar)");
                 while (scanner.hasNextLine()) {
                     System.out.print("... ");
                     String extra = scanner.nextLine();
@@ -67,7 +75,7 @@ public class Main {
         List<Token> tokens = lexer.tokenize();
         printTokens(tokens);
         if (!lexer.errors.isEmpty()) {
-            System.out.println("Errores léxicos:");
+            System.out.println("Errores lexicos encontrados:");
             for (String err : lexer.errors) {
                 System.out.println("   " + err);
             }
@@ -76,7 +84,7 @@ public class Main {
     }
 
     static void printTokens(List<Token> tokens) {
-        String sep = "─".repeat(65);
+        String sep = "-".repeat(65);
         System.out.println("\n" + sep);
         System.out.printf("%-4s %-25s %-20s %-6s %s%n", "#", "TIPO", "VALOR", "LÍNEA", "COL");
         System.out.println(sep);
