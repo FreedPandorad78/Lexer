@@ -82,3 +82,7 @@ Lexer/
 - Un comentario de bloque sin cerrar (`/* ...`) no genera error explícito
 - No soporta el operador `>>>` (unsigned right shift)
 - No es un parser: valida tokens, no la sintaxis completa del programa
+
+Integrantes:
+- David Orozco 
+- Juan Pablo Londoño
